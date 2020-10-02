@@ -1,16 +1,19 @@
 package com.company;
 
+import com.company.utilities.Utility;
 import com.sun.org.apache.xerces.internal.impl.xs.identity.UniqueOrKey;
 
 import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.PriorityQueue;
-import java.util.Set;
+import java.util.*;
 
 public class HuffmanTree implements Serializable {
     private HuffmanNode root;
     private HashMap<Byte, String> encodingTable;
+    private int numberOfZerosAdded;
+
+    public int getNumberOfZerosAdded() {
+        return numberOfZerosAdded;
+    }
 
     public HuffmanTree(HuffmanNode root) {
         this.root = root;
@@ -123,6 +126,100 @@ public class HuffmanTree implements Serializable {
             stringBuilder.deleteCharAt(stringBuilder.length() - 1);
         }
 
+    }
+
+    public byte[] encode(byte[] srcFileBytes) {
+
+        if (this.encodingTable == null || this.encodingTable.size() == 0) {
+            this.getEncodingTable();
+        }
+
+        StringBuilder stringBuilder = new StringBuilder();
+
+        int anotherPointer = 0;//另一个指针。考虑到内存问题，不适宜再新建存储空间，否则处理大文件的时候会堆溢出
+        // 直接在原文件的字节数组上操作
+
+        //遍历源文件的字节数组
+        for (int i = 0; i < srcFileBytes.length; i++) {
+            //先在stringBuilder中加入这个字节对应的编码
+            stringBuilder.append(this.encodingTable.get(srcFileBytes[i]));
+
+            //如果stringBuilder的字节数超过了8，则取出前八位写入list中
+            while (stringBuilder.length() >= 8) {
+                byte byteeeee = (byte) Integer.parseInt(stringBuilder.substring(0, 8), 2);
+                srcFileBytes[anotherPointer] = byteeeee;
+                anotherPointer++;
+                stringBuilder.delete(0, 8);
+            }
+        }
+
+        int count = 0;
+        //最后不满8位的话用0凑
+        while (stringBuilder.length() < 8) {
+            stringBuilder.append(0);
+            count++;
+        }
+        this.numberOfZerosAdded = count;
+        srcFileBytes[anotherPointer] = (byte) Integer.parseInt(stringBuilder.substring(0, 8), 2);
+        anotherPointer++;
+
+        //将arraylist中的内容转换到byte数组
+        byte[] compressedBytes = Arrays.copyOfRange(srcFileBytes, 0, anotherPointer);
+        return compressedBytes;
+
+    }
+
+    public byte[] decode(byte[] compressedBytes, long originalFileSize) {
+
+        if (this.encodingTable == null || this.encodingTable.size() == 0) {
+            this.getEncodingTable();
+        }
+
+        //反转编码哈希表
+        HashMap<String, Byte> reversedMap = new HashMap<>();
+        Set<Map.Entry<Byte, String>> entrySet = encodingTable.entrySet();
+        for (Map.Entry<Byte, String> entry : entrySet
+        ) {
+            reversedMap.put(entry.getValue(), entry.getKey());
+        }
+
+        //根据原来文件的大小，创建恢复后的字节数组
+        byte[] restoredBytes = new byte[(int) originalFileSize];
+
+        StringBuilder stringBuilder = new StringBuilder();
+
+        int i = 0;
+        int p = 0;
+        while (i < restoredBytes.length) {
+
+            //每次往stringbuilder中读至多32个字节
+            for (int x = 0; x < 32 && p < compressedBytes.length; x++, p++) {
+                stringBuilder.append(Utility.to8DigitBinaryString(compressedBytes[p]));
+
+            }
+
+            //两个指针
+            int startPtr = 0;
+            int endPtr = 0;
+
+
+            //试探性
+            while (endPtr < stringBuilder.length() + 1 && i < restoredBytes.length) {
+                if (reversedMap.containsKey(stringBuilder.substring(startPtr, endPtr))) {
+                    restoredBytes[i] = reversedMap.get(stringBuilder.substring(startPtr, endPtr));
+                    startPtr = endPtr;
+                    i++;
+                }
+                endPtr++;
+            }
+
+            stringBuilder.delete(0, startPtr);
+
+
+        }
+
+
+        return restoredBytes;
     }
 
 }
