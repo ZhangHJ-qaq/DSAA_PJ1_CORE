@@ -108,11 +108,17 @@ public class HuffmanTree implements Serializable {
      * @return HashMap<Byte, String>
      */
     public HashMap<Byte, String> getEncodingTable() {
+        //如果传入的是空文件
+        if (this.root == null) {
+            this.encodingTable = null;
+            return this.encodingTable;
+        }
         this.computeEncodingTable(root, new StringBuilder());
         return this.encodingTable;
     }
 
     private void computeEncodingTable(HuffmanNode node, StringBuilder stringBuilder) {
+
         if (node.isLeafNode()) {
             this.encodingTable.put(node.data, stringBuilder.toString());
             return;
@@ -132,6 +138,10 @@ public class HuffmanTree implements Serializable {
 
         if (this.encodingTable == null || this.encodingTable.size() == 0) {
             this.getEncodingTable();
+        }
+
+        if (srcFileBytes.length == 0) {
+            return new byte[0];
         }
 
         StringBuilder stringBuilder = new StringBuilder();
@@ -173,6 +183,10 @@ public class HuffmanTree implements Serializable {
 
         if (this.encodingTable == null || this.encodingTable.size() == 0) {
             this.getEncodingTable();
+        }
+
+        if (compressedBytes.length == 0) {
+            return new byte[0];
         }
 
         //反转编码哈希表

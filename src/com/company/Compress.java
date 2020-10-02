@@ -62,6 +62,7 @@ public class Compress {
         File srcFile = new File(src);
         File desFile = new File(des);
 
+
         //获取输入输出流
         ObjectInputStream in = new ObjectInputStream(
                 new DataInputStream(new BufferedInputStream(new FileInputStream(srcFile))));

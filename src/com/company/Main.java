@@ -24,11 +24,10 @@ public class Main {
 //                "D:\\OneDrive\\DSAA\\pj1\\testcases\\testcase02NormalSingleFile\\1_compressed.txt",
 //                "D:\\OneDrive\\DSAA\\pj1\\testcases\\testcase02NormalSingleFile\\1_recovered.txt");
 
-//       Compress.compressSingleFile("D:\\test.txt","D:\\text_com.txt");
-//       Compress.decompressSingleFile("D:\\text_com.txt","D:\\text_re.txt");
+/*        Compress.compressSingleFile("D:\\test.txt", "D:\\text_com.txt");
+        Compress.decompressSingleFile("D:\\text_com.txt", "D:\\text_re.txt");*/
 
-//        Compress.compressSingleFile("D:\\test.txt","D:\\test_compressed.txt");
-//        Compress.decompressSingleFile("D:\\test_compressed.txt","D:\\test_recovered.txt");
+
 
     }
 
