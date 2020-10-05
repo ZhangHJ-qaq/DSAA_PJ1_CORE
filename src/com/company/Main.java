@@ -10,7 +10,7 @@ public class Main {
 
     public static void main(String[] args) throws IOException, ClassNotFoundException {
         CompressResult compressResult = Compress.compress(
-                "D:\\testcases\\testcase4EmptyFolder\\Empty",
+                "D:\\testcases\\testcase07XlargeSubFolders",
                 "D:\\testttt.haojie"
         );
         System.out.printf("File size is %f MB. Time consumed is %f s. Compression speed is %f MB/s\n"

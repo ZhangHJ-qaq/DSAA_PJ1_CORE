@@ -161,10 +161,14 @@ public class Compress {
         huffmanZipData.type = HuffmanZipData.TYPE_DIRECTORY;
 
         //初始化三个静态变量
-        rootFolder = srcFile.getPath();
+        rootFolder = srcFile.getParentFile().getPath();
         dirList = new ArrayList<>();
         fileList = new ArrayList<>();
 
+        //在目录列表中加入根目录
+        dirList.add(srcFile.getPath().replace(rootFolder, ""));
+
+        //递归遍历目录，压缩文件，更新文件列表，更新目录列表
         traverse(srcFile);
 
         huffmanZipData.fileList = fileList;
@@ -245,7 +249,7 @@ public class Compress {
         }
 
         CompressResult compressResult = new CompressResult();
-        compressResult.fileSize = Utility.getSize(srcFile)/1024.0/1024.0;
+        compressResult.fileSize = Utility.getSize(srcFile) / 1024.0 / 1024.0;
 
         long startTime = System.currentTimeMillis();
 
