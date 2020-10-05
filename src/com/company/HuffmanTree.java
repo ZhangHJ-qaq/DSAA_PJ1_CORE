@@ -1,5 +1,6 @@
 package com.company;
 
+import com.company.utilities.MyByteArrayList;
 import com.company.utilities.Utility;
 import com.sun.org.apache.xerces.internal.impl.xs.identity.UniqueOrKey;
 
@@ -51,7 +52,7 @@ public class HuffmanTree implements Serializable {
     private static PriorityQueue<HuffmanNode> generateNodeQueue(int[] frequencyArray) {
         PriorityQueue<HuffmanNode> huffmanNodePriorityQueue = new PriorityQueue<>();
 
-        for (int i = 0; i <= frequencyArray.length - 1; i++) {
+        for (int i = 0; i < frequencyArray.length; i++) {
             if (frequencyArray[i] <= 0) continue;
 
             //数组下标 减 128 =byte数据
@@ -146,19 +147,19 @@ public class HuffmanTree implements Serializable {
 
         StringBuilder stringBuilder = new StringBuilder();
 
-        int anotherPointer = 0;//另一个指针。考虑到内存问题，不适宜再新建存储空间，否则处理大文件的时候会堆溢出
-        // 直接在原文件的字节数组上操作
+        MyByteArrayList byteList = new MyByteArrayList();
 
         //遍历源文件的字节数组
         for (int i = 0; i < srcFileBytes.length; i++) {
             //先在stringBuilder中加入这个字节对应的编码
+
+
             stringBuilder.append(this.encodingTable.get(srcFileBytes[i]));
 
             //如果stringBuilder的字节数超过了8，则取出前八位写入list中
             while (stringBuilder.length() >= 8) {
                 byte byteeeee = (byte) Integer.parseInt(stringBuilder.substring(0, 8), 2);
-                srcFileBytes[anotherPointer] = byteeeee;
-                anotherPointer++;
+                byteList.add(byteeeee);
                 stringBuilder.delete(0, 8);
             }
         }
@@ -170,11 +171,13 @@ public class HuffmanTree implements Serializable {
             count++;
         }
         this.numberOfZerosAdded = count;
-        srcFileBytes[anotherPointer] = (byte) Integer.parseInt(stringBuilder.substring(0, 8), 2);
-        anotherPointer++;
+        byteList.add((byte) Integer.parseInt(stringBuilder.substring(0, 8), 2));
+
 
         //将arraylist中的内容转换到byte数组
-        byte[] compressedBytes = Arrays.copyOfRange(srcFileBytes, 0, anotherPointer);
+        byte[] compressedBytes =byteList.getArray();
+
+
         return compressedBytes;
 
     }

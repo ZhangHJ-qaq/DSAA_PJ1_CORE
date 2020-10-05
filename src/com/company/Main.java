@@ -9,26 +9,20 @@ import java.util.*;
 public class Main {
 
     public static void main(String[] args) throws IOException, ClassNotFoundException {
-       Compress.compressSingleFile("D:\\OneDrive\\DSAA\\pj1\\testcases\\testcase03XLargeSingleFile\\3.csv",
-              "D:\\OneDrive\\DSAA\\pj1\\testcases\\testcase03XLargeSingleFile\\3_compressed.csv");
-        Compress.decompressSingleFile(
-                "D:\\OneDrive\\DSAA\\pj1\\testcases\\testcase03XLargeSingleFile\\3_compressed.csv",
-             "D:\\OneDrive\\DSAA\\pj1\\testcases\\testcase03XLargeSingleFile\\3_recovered.csv");
+        CompressResult compressResult = Compress.compress(
+                "D:\\testcases\\testcase4EmptyFolder\\Empty",
+                "D:\\testttt.haojie"
+        );
+        System.out.printf("File size is %f MB. Time consumed is %f s. Compression speed is %f MB/s\n"
+                , compressResult.fileSize, compressResult.timeConsumed, compressResult.speed);
 
-//
-//        Compress.compressSingleFile(
-//                "D:\\OneDrive\\DSAA\\pj1\\testcases\\testcase02NormalSingleFile\\1.txt",
-//                "D:\\OneDrive\\DSAA\\pj1\\testcases\\testcase02NormalSingleFile\\1_compressed.txt"
-//        );
-//        Compress.decompressSingleFile(
-//                "D:\\OneDrive\\DSAA\\pj1\\testcases\\testcase02NormalSingleFile\\1_compressed.txt",
-//                "D:\\OneDrive\\DSAA\\pj1\\testcases\\testcase02NormalSingleFile\\1_recovered.txt");
+        CompressResult compressResult1 = Compress.decompress(
+                "D:\\testttt.haojie",
+                "D:\\testdecompress"
+        );
 
-/*        Compress.compressSingleFile("D:\\test.txt", "D:\\text_com.txt");
-        Compress.decompressSingleFile("D:\\text_com.txt", "D:\\text_re.txt");*/
-
-
-
+        System.out.printf("File size is %f MB. Time consumed is %f s. Decompression speed is %f MB/s\n"
+                , compressResult1.fileSize, compressResult1.timeConsumed, compressResult1.speed);
     }
 
 
